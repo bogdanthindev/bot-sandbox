@@ -1,10 +1,7 @@
-/*
- * message.js
- * This file contains your bot code
- */
-
 const recastai = require('recastai')
+const Robin = require('robin-js-sdk')
 
+const robin = new Robin(process.env.ROBINAUTH)
 // This function is the core of the bot behaviour
 const replyMessage = (message) => {
   // Instantiate Recast.AI SDK, just for request service
@@ -20,13 +17,9 @@ const replyMessage = (message) => {
   // Call Recast.AI SDK, through /converse route
   request.converseText(text, { conversationToken: senderId })
   .then(result => {
-    /*
-    * YOUR OWN CODE
-    * Here, you can add your own process.
-    * Ex: You can call any external API
-    * Or: Update your mongo DB
-    * etc...
-    */
+    robin.api.organizations.get('thinslices').then(function (response) {
+      message.addReply({ type: 'text', content: response.getData() })
+    })
     if (result.action) {
       console.log('The conversation action is: ', result.action.slug)
     }
